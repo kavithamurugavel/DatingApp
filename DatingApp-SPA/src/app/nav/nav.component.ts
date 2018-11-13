@@ -19,10 +19,10 @@ export class NavComponent implements OnInit {
     this.authService.login(this.model).subscribe(next => {
       console.log('Logged in successfully');
     }, error => {
-      console.log('Failed to login');
+      console.log(error);
     });
   }
-  
+
   loggedIn() {
     const token = localStorage.getItem('token');
     return !!token; // !! will return true or false i.e. shorthand for an if statement
