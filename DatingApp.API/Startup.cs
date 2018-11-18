@@ -78,7 +78,8 @@ namespace DatingApp.API
                         var error = context.Features.Get<IExceptionHandlerFeature>();
                         if(error != null)
                         {
-                            context.Response.AddApplicationError(error.Error.Message); // from Extensions class
+                            // Read this to see how extensions work: https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/extension-methods
+                            context.Response.AddApplicationError(error.Error.Message); // from Extensions class                            
                             await context.Response.WriteAsync(error.Error.Message);
                         }
                     });

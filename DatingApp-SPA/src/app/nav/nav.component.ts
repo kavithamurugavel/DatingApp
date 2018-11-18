@@ -16,6 +16,10 @@ export class NavComponent implements OnInit {
 
   login() {
     // subscribe should be used for things that return an observable
+    // subscribe is like listening to an event
+    // A set of RxJS operators i.e. pipe, map, etc applied to an observable is a recipe—that is,
+    // a set of instructions for producing the values you’re interested in.
+    // By itself, the recipe doesn’t do anything. You need to call subscribe() to produce a result through the recipe.
     this.authService.login(this.model).subscribe(next => {
       console.log('Logged in successfully');
     }, error => {

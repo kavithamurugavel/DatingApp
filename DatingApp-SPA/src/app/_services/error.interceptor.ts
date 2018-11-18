@@ -4,11 +4,15 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Injectable()
-
+// https://angular.io/api/common/http/HttpInterceptor
+// https://medium.com/@MetonymyQT/angular-http-interceptors-what-are-they-and-how-to-use-them-52e060321088
+// https://angular.io/guide/rx-library - check Error Handling part
 // basically we try to intercept the error from the API/server
 // having the error code globally as an injectable so that we can prevent error handling code duplication
 export class ErrorInterceptor implements HttpInterceptor {
     // takes req of type HttpRequest, next of type HttpHandler and returns an Observable of type HttpEvent
+    // Most interceptors will transform the outgoing request before passing it to the
+    // next interceptor in the chain, by calling next.handle(transformedReq).
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(req).pipe(
             catchError(error => {

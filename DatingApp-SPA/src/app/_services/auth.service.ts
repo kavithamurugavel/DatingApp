@@ -18,6 +18,9 @@ login(model: any) {
   // https://angular.io/guide/rx-library
   // map is for storing token locally for easy access
   // this can be seen in the browser after logging in -> chrome console -> Application -> Local Storage -> token will be present there
+  // You can use pipes to link operators together. Pipes let you combine multiple functions into a
+  // single function. The pipe() function takes as its arguments the functions you want to combine,
+  // and returns a new function that, when executed, runs the composed functions in sequence.
   return this.http.post(this.baseUrl + 'login', model)
   .pipe(
     map((response: any) => {
