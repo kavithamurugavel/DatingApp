@@ -5,7 +5,12 @@ import {map} from 'rxjs/operators';
 // we use service so that the api calls are all centralized and there is no duplication of code in every component's ts file
 // this allows us to inject things to the service
 @Injectable({
-  providedIn: 'root' // root i.e. the app module providing the service
+  providedIn: 'root' // root i.e. the app module providing the service.
+  // Providing service at the root or AppModule level means it is registered with the root injector.
+  // There is just one service instance in the entire app and every class that injects service
+  // gets this service instance (refer to the constructors of nav component and register component having the authService instance)
+  // unless you configure another provider with a child injector.
+  // link: https://angular.io/guide/dependency-injection
 })
 export class AuthService {
   baseUrl = 'http://localhost:5000/api/auth/';

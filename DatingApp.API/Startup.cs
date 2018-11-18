@@ -72,6 +72,9 @@ namespace DatingApp.API
                 // builder because UseExceptionHandler returns IApplicationBuilder
                 // accessing context inside the Run method
                 app.UseExceptionHandler(builder => {
+                    // https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.http.requestdelegate?view=aspnetcore-2.1
+                    // The Run method takes a RequestDelegate, which is a delegate that in turn takes a HTTPContext (see link above). That's why the 'context' variable below is 
+                    // automatically understood by the compiler as an HttpContext variable.
                     builder.Run(async context => {
                         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;// we can control the status code here
 
