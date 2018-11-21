@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
+import { AlertifyService } from '../_services/alertify.service';
 
 @Component({
   selector: 'app-nav',
@@ -9,7 +10,8 @@ import { AuthService } from '../_services/auth.service';
 export class NavComponent implements OnInit {
   model: any = {}; // object for username and password, used in the template i.e. html
 
-  constructor(private authService: AuthService) { }
+  // making authService public so that we don't get errors accessing it from nav.component.html
+  constructor(public authService: AuthService, private alertify: AlertifyService) { }
 
   ngOnInit() {
   }
@@ -21,21 +23,25 @@ export class NavComponent implements OnInit {
     // a set of instructions for producing the values you’re interested in.
     // By itself, the recipe doesn’t do anything. You need to call subscribe() to produce a result through the recipe.
     this.authService.login(this.model).subscribe(next => {
-      console.log('Logged in successfully');
+      this.alertify.success('Logged in successfully');
     }, error => {
-      console.log(error);
+      this.alertify.error(error);
     });
   }
 
   loggedIn() {
-    const token = localStorage.getItem('token');
-    return !!token; // !! will return true or false i.e. shorthand for an if statement
+    return this.authService.loggedIn();
   }
+  // first version of loggedIn method
+  // loggedIn() {
+  //   const token = localStorage.getItem('token');
+  //   return !!token; // !! will return true or false i.e. shorthand for an if statement
+  // }
 
   // when user logs out we need to delete token from local storage
   logout() {
     localStorage.removeItem('token');
-    console.log('Logged out');
+    this.alertify.message('Logged out');
   }
 
 }

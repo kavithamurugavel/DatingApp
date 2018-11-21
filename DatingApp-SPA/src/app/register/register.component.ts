@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
+import { AlertifyService } from '../_services/alertify.service';
 
 @Component({
   selector: 'app-register',
@@ -11,22 +12,21 @@ export class RegisterComponent implements OnInit {
   @Output() cancelRegister = new EventEmitter(); // @Output is to emit properties from child to parent
   model: any = {};
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private alertify: AlertifyService) { }
 
   ngOnInit() {
   }
 
   register() {
     this.authService.register(this.model).subscribe(() => {
-      console.log('registration successful');
+      this.alertify.success('Registration Successful');
     }, error => {
-      console.log('error');
+      this.alertify.error('Error');
     });
   }
 
   cancel() {
     this.cancelRegister.emit(false); // simple example
-    console.log('cancelled');
   }
 
 }

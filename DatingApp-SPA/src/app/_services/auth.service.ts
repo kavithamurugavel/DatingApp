@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {map} from 'rxjs/operators';
+import {JwtHelperService} from '@auth0/angular-jwt';
 
 // we use service so that the api calls are all centralized and there is no duplication of code in every component's ts file
 // this allows us to inject things to the service
@@ -14,6 +15,8 @@ import {map} from 'rxjs/operators';
 })
 export class AuthService {
   baseUrl = 'http://localhost:5000/api/auth/';
+  jwtHelper = new JwtHelperService();
+  decodedToken: any;
 
 constructor(private http: HttpClient) {}
 // model object is the info from the navbar i.e. login box
@@ -32,12 +35,22 @@ login(model: any) {
       const user = response; // the token coming back from the service
       if (user) {
         localStorage.setItem('token', user.token);
+        // storing the decoded token
+        this.decodedToken = this.jwtHelper.decodeToken(user.token);
+        console.log(this.decodedToken);
       }
     }));
 }
 
 register(model: any) {
   return this.http.post(this.baseUrl + 'register', model);
+}
+
+// moving this from its initial placement of nav component, since we might be reusing this in other pages in future
+// so we dont want to keep unnecessarily injecting nav component in the other places - sec 6 lecture 54
+loggedIn() {
+  const token = localStorage.getItem('token');
+  return !this.jwtHelper.isTokenExpired(token);
 }
 
 }

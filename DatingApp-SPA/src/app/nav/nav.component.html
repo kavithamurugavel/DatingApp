@@ -1,49 +1,51 @@
 <!-- Code obtained and edited/condensed from navbar element (right click -> Inspect on nav bar) at https://getbootstrap.com/docs/4.1/examples/jumbotron/ -->
 <!-- also https://getbootstrap.com/docs/4.1/components/dropdowns/ -->
-<nav class="navbar navbar-expand-md navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">Dating App</a>
+<nav class="navbar navbar-expand-md navbar-dark bg-primary">
+  <div class="container">
+      <a class="navbar-brand" href="#">Dating App</a>
 
-  
-  <ul class="navbar-nav mr-auto">
-    <li class="nav-item active">
-      <a class="nav-link" href="#">Matches</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Lists</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Messages</a>
-    </li>
-    <li class="nav-item">
-      <!-- logout on click event -->
-      <a class="nav-link"(click)="logout()">Logout</a>
-    </li>
-  </ul>
-
-  <div *ngIf="loggedIn()" class="dropdown">
-    <a class="dropdown-toggle text-light">
-      Welcome User
-    </a>
-  
-    <div class="dropdown-menu">
-      <a class="dropdown-item" href="#"><i class ="fa fa-user"></i>Edit Profile</a>
-      <div class="dropdown-divider"></div>
-      <a class="dropdown-item" href="#"><i class ="fa fa-sign-out"></i>Logout</a>
-    </div>
-  </div>
-
-  <!-- # - indicating that it is an angular template form -->
-  <!-- ngModel is used for two binding between template and component -->
-  <!-- ngSubmit we are doing at form level rather than the submit button level -->
-  <!-- required keyword in the input tag is to let angular know that the field is required -->
-  <form *ngIf="!loggedIn()" #loginForm="ngForm" class="form-inline my-2 my-lg-0" (ngSubmit)="login()">
-    <input class="form-control mr-sm-2" type="text" name="username" 
-    placeholder="Username" required [(ngModel)]="model.username">
-    <input class="form-control mr-sm-2" type="password" name="password" 
-    placeholder="Password" required [(ngModel)]="model.password">
+      <!-- showing the matches, lists and messages only if the user is logged in -->
+      <ul *ngIf="loggedIn()" class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Matches</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Lists</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Messages</a>
+        </li>
+      </ul>
     
-    <!-- disable button if form is not in valid state i.e. username and/or password are empty -->
-    <button [disabled]="!loginForm.valid" class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
-  </form>
- 
+      <!-- dropdown styling from https://valor-software.com/ngx-bootstrap/old/3.0.1/#/dropdowns
+      under 'Trigger by tag'. Section 6 Lecture 56 -->
+      <div *ngIf="loggedIn()" class="dropdown" dropdown>
+        <a class="dropdown-toggle text-light" dropdownToggle>
+          <!-- the unique_name property from the decoded token gives the username 
+          the ? below means that the unique_name is optional, so that the 'undefined' errors can be prevented
+          also titlecase means something like bob will become Bob on the page-->
+          Welcome {{authService.decodedToken?.unique_name | titlecase}}
+        </a>
+      
+        <div class="dropdown-menu mt-3" *dropdownMenu>
+          <a class="dropdown-item" href="#"><i class ="fa fa-user"></i>Edit Profile</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" (click)="logout()"><i class ="fa fa-sign-out"></i>Logout</a>
+        </div>
+      </div>
+    
+      <!-- # - indicating that it is an angular template form -->
+      <!-- ngModel is used for two binding between template and component -->
+      <!-- ngSubmit we are doing at form level rather than the submit button level -->
+      <!-- required keyword in the input tag is to let angular know that the field is required -->
+      <form *ngIf="!loggedIn()" #loginForm="ngForm" class="form-inline my-2 my-lg-0" (ngSubmit)="login()">
+        <input class="form-control mr-sm-2" type="text" name="username" 
+        placeholder="Username" required [(ngModel)]="model.username">
+        <input class="form-control mr-sm-2" type="password" name="password" 
+        placeholder="Password" required [(ngModel)]="model.password">
+        
+        <!-- disable button if form is not in valid state i.e. username and/or password are empty -->
+        <button [disabled]="!loginForm.valid" class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
+      </form>
+  </div>
 </nav>
