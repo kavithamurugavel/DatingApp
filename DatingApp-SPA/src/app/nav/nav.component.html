@@ -2,18 +2,21 @@
 <!-- also https://getbootstrap.com/docs/4.1/components/dropdowns/ -->
 <nav class="navbar navbar-expand-md navbar-dark bg-primary">
   <div class="container">
-      <a class="navbar-brand" href="#">Dating App</a>
+      <a class="navbar-brand" [routerLink]="['/home']">Dating App</a>
 
       <!-- showing the matches, lists and messages only if the user is logged in -->
       <ul *ngIf="loggedIn()" class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Matches</a>
+        <!--'' a-routerLink' is the directive we need to scaffold the router code below, and routerLink=active makes the selected
+         link highlighted when they are active/selected. Another definition: its the directive for adding/removing classes from an HTML element 
+         when an associated routerLink contained on or inside the element becomes active/inactive. - Section 7 Lecture 61 -->
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" [routerLink]="['/members']">Matches</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Lists</a>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" [routerLink]="['/lists']" >Lists</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Messages</a>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" [routerLink]="['/messages']">Messages</a>
         </li>
       </ul>
     

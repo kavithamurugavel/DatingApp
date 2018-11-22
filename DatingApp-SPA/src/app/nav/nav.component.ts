@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-nav',
@@ -11,7 +12,8 @@ export class NavComponent implements OnInit {
   model: any = {}; // object for username and password, used in the template i.e. html
 
   // making authService public so that we don't get errors accessing it from nav.component.html
-  constructor(public authService: AuthService, private alertify: AlertifyService) { }
+  constructor(public authService: AuthService, private alertify: AlertifyService,
+    private router: Router) { }
 
   ngOnInit() {
   }
@@ -22,10 +24,16 @@ export class NavComponent implements OnInit {
     // A set of RxJS operators i.e. pipe, map, etc applied to an observable is a recipe—that is,
     // a set of instructions for producing the values you’re interested in.
     // By itself, the recipe doesn’t do anything. You need to call subscribe() to produce a result through the recipe.
+    // also, next technically means the step we define after request is successful,
+    // in this case, a message displaying that the login was successful
     this.authService.login(this.model).subscribe(next => {
       this.alertify.success('Logged in successfully');
     }, error => {
       this.alertify.error(error);
+    },
+    // the following anonymous function coincides with the 'complete' parameter of the subscribe method
+    () => {
+      this.router.navigate(['/members']); // redirecting to members after login
     });
   }
 
@@ -42,6 +50,7 @@ export class NavComponent implements OnInit {
   logout() {
     localStorage.removeItem('token');
     this.alertify.message('Logged out');
+    this.router.navigate(['/home']);
   }
 
 }
