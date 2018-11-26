@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -38,11 +39,20 @@ namespace DatingApp.API
             // plus the Configuration. is part of the Configuration declared in the ctor
             services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+            .AddJsonOptions(opt => {
+                // to bypass the self referencing loop error between user reference in photo 
+                // and photo reference in user, for eg.
+                opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
             services.AddCors();
+            services.AddAutoMapper();
+            services.AddTransient<Seed>(); // adding the data seed part as a service
 
             // service created once per request in the current scope
             services.AddScoped<IAuthRepository, AuthRepository>();
+
+            services.AddScoped<IDatingRepository, DatingRepository>();
 
             // Section 3, Lecture 34
             // letting the system know what authentication we need if we put the annotation [Authorize] in our controller
@@ -59,7 +69,7 @@ namespace DatingApp.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, Seed seeder)
         {
             if (env.IsDevelopment()) // development mode
             {
@@ -89,6 +99,8 @@ namespace DatingApp.API
                 });
                 // app.UseHsts();
             }
+
+            //seeder.SeedUsers(); // just for the seeding data part
 
             // app.UseHttpsRedirection();
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
