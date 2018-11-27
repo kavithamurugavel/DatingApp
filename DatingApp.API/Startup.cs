@@ -47,6 +47,8 @@ namespace DatingApp.API
             });
             services.AddCors();
             services.AddAutoMapper();
+            
+            // Transient lifetime services are created each time they're requested. This lifetime works best for lightweight, stateless services.
             services.AddTransient<Seed>(); // adding the data seed part as a service
 
             // service created once per request in the current scope
