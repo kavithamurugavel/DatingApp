@@ -1,9 +1,12 @@
 import {Routes} from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { MessagesComponent } from './messages/messages.component';
-import { MemberListComponent } from './member-list/member-list.component';
+import { MemberListComponent } from './members/member-list/member-list.component';
 import { ListsComponent } from './lists/lists.component';
 import { AuthGuard } from './_guards/auth.guard';
+import { MemberDetailComponent } from './members/member-detail/member-detail.component';
+import { MemberDetailResolver } from './_resolvers/member-detail.resolver';
+import { MemberListResolver } from './_resolvers/member-list.resolver';
 
 // array of Routes and each route is an object
 // ordering of the routes is important, for eg: we shouldn't have the wildcard route line first
@@ -18,9 +21,11 @@ export const appRoutes: Routes = [
         runGuardsAndResolvers: 'always',
         canActivate: [AuthGuard], // adding our can activate route guard here
         children: [
-            {path: 'members', component: MemberListComponent},
+            {path: 'members', component: MemberListComponent, resolve: {users: MemberListResolver}},
+            // resolve part is seen in section 9 lecture 90
+            {path: 'members/:id', component: MemberDetailComponent, resolve: {user: MemberDetailResolver}},
             {path: 'messages', component: MessagesComponent},
-            {path: 'lists', component: ListsComponent}
+            {path: 'lists', component: ListsComponent},
         ]
     },
     // the following will be a wildcard route

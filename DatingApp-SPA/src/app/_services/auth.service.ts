@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {JwtHelperService} from '@auth0/angular-jwt';
+import { environment } from 'src/environments/environment';
 
 // we use service so that the api calls are all centralized and there is no duplication of code in every component's ts file
 // this allows us to inject things to the service
@@ -14,7 +15,7 @@ import {JwtHelperService} from '@auth0/angular-jwt';
   // link: https://angular.io/guide/dependency-injection
 })
 export class AuthService {
-  baseUrl = 'http://localhost:5000/api/auth/';
+  baseUrl = environment.apiUrl + 'auth/';
   jwtHelper = new JwtHelperService();
   decodedToken: any;
 
