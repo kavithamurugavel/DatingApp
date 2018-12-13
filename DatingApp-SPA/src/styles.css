@@ -17,6 +17,10 @@ we are writing the following globally more in keeping with our requirements*/
     border-radius: 4px;
   }
   
+  /* > in css - The > means a child element - it is the child selector. That is, directly / immediately nested after. 
+  For eg: the "li > ul" syntax specifies that the ul must be a child of li. 
+  "li ul" instead says that the the styled ul is descendant of li, no matter how many levels below. 
+  https://stackoverflow.com/questions/8787134/when-to-use-sign-in-css */
   .nav-tabs > li.open, .member-tabset > .nav-tabs > li:hover {
     border-bottom: 4px solid #fbcdcf;
   }

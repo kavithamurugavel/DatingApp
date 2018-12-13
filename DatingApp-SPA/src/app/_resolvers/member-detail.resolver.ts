@@ -19,7 +19,8 @@ export class MemberDetailResolver implements Resolve<User> {
             catchError(error => {
                 this.alertify.error('Problem retrieving data');
                 this.router.navigate(['/members']); // rerouting back to members
-                return of(null); // returning observable of null
+                return of(null); // returning observable of null. Of just emits the values specified, in this case, null. Check link
+                // https://stackoverflow.com/questions/47889210/why-we-should-use-rxjs-of-function for more info on of()
             })
         );
     }
