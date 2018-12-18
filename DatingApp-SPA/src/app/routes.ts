@@ -22,7 +22,8 @@ export const appRoutes: Routes = [
         canActivate: [AuthGuard], // adding our can activate route guard here
         children: [
             {path: 'members', component: MemberListComponent, resolve: {users: MemberListResolver}},
-            // resolve part is seen in section 9 lecture 90
+            // resolve part is seen in section 9 lecture 90. resolve key holds another object where you
+            // will define a key and assign your resolver service as a value to it.
             {path: 'members/:id', component: MemberDetailComponent, resolve: {user: MemberDetailResolver}},
             {path: 'messages', component: MessagesComponent},
             {path: 'lists', component: ListsComponent},

@@ -9,6 +9,9 @@ import { catchError } from 'rxjs/operators';
 @Injectable()
 // the Route Resolver is to prevent loading a null user on ngInit's loadUser (in member detail component)
 // and in turn having to use a safe navigation operator ? on every property of user in the html
+// resolver is that intermediate code, which can be executed when a link has been clicked and before a component is loaded.
+// In our case it is to prevent loading a null user.
+// https://codeburst.io/understanding-resolvers-in-angular-736e9db71267
 export class MemberDetailResolver implements Resolve<User> {
     constructor(private userService: UserService, private router: Router,
         private alertify: AlertifyService) {}

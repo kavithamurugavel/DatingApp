@@ -3,7 +3,8 @@
     <!-- this means for large screens, 2 grid columns i.e. 6 elements will be displayed
     in medium screens, 3 grid columns i.e. 4 elements displayed, and for small screens,
     6 wide i.e. only 2 elements will be displayed. Shortcut to generate this snippet is 
-    div.col-lg-2.col-md-3.col-sm-6 and press tab-->
+    div.col-lg-2.col-md-3.col-sm-6 and press tab. This is bootstrap related.
+    Read https://stackoverflow.com/questions/24175998/meaning-of-numbers-in-col-md-4-col-xs-1-col-lg-2-in-bootstrap for better explanation-->
     <div *ngFor="let user of users" class="col-lg-2 col-md-3 col-sm-6">
       <!-- child component member card; input property user is [user] -->
       <app-member-card [user]="user"></app-member-card>
