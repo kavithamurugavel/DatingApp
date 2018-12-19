@@ -5,6 +5,8 @@
           <h1>Your Profile</h1>
       </div>
       <div class="col-sm-8">
+        <!-- bootstrap for alerts. https://v4-alpha.getbootstrap.com/components/alerts/ -->
+        <!-- dirty is for when if form/field is modified https://www.w3schools.com/angular/angular_validation.asp -->
         <div *ngIf="editForm.dirty" class="alert alert-info">
           <strong>Information:</strong>You have made changes. Any unsaved changes will be lost.
         </div>
@@ -35,7 +37,9 @@
           </div>
           <div class="card-footer">
             <!-- we give form = editForm because the button has to respond to the 'submit' functionality from below 
-            so we are connecting the form's id to the form name here so that the Save changes button responds to submit-->
+            so we are connecting the form's id to the form name here so that the Save changes button responds to submit.
+            Explanation: https://www.w3schools.com/tags/att_button_form.asp - Specifies the form element the <button> element belongs to. 
+            The value of this attribute must be the id attribute of a <form> element in the same document.-->
             <button [disabled]="!editForm.dirty" form="editForm" class="btn btn-success btn-block">Save Changes</button>
           </div>
         </div>
@@ -47,10 +51,14 @@
             <tab heading="Edit Profile">
               <form #editForm="ngForm" id="editForm" (ngSubmit)="updateUser()">
                   <h4>Description</h4>
-                  <!-- form-control is a bootstrap class for styling -->
+                  <!-- form-control is a bootstrap class for styling. https://getbootstrap.com/docs/4.0/components/forms/#form-controls -->
+                  <!-- Textual form controls—like <input>s, <select>s, and <textarea>s—are styled with the .form-control class.
+                    Included are styles for general appearance, focus state, sizing, and more. -->
                   <textarea name="introduction" rows="6" class="form-control"
                   [(ngModel)]="user.introduction"></textarea>
                   <h4>Looking For</h4>
+                  <!-- rows - Specifies the visible number of lines in a text area
+                  cols - Specifies the visible width of a text area -->
                   <textarea name="lookingFor" rows="6" class="form-control"
                   [(ngModel)]="user.lookingFor"></textarea>
                   <h4>Interests</h4>

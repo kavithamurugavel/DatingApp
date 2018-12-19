@@ -36,6 +36,7 @@ getUser(id): Observable<User> {
 }
 
 updateUser(id: number, user: User) {
+  // PUT: update the user on the server. Returns the updated user upon success.
   return this.http.put(this.baseUrl + 'users/' + id, user);
 }
 }

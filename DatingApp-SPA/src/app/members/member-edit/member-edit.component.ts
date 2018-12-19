@@ -12,12 +12,16 @@ import { AuthService } from 'src/app/_services/auth.service';
   styleUrls: ['./member-edit.component.css']
 })
 export class MemberEditComponent implements OnInit {
+  // https://blog.angular-university.io/angular-viewchild/ (esp. the part 'Using @ViewChild to inject a reference to a DOM element')
   @ViewChild('editForm') editForm: NgForm; // so that we have access to all the form methods
   user: User;
+  // https://angular.io/api/core/HostListener
   // the following lines are to display a warning of 'unsaved changes' if we close the browser window
-  // while editing
+  // while editing. window:beforeunload is a browser event which is triggered right before actually unloading the page.
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
+    // A Boolean value which is true if the event has not been canceled;
+    // otherwise, if the event has been canceled or the default has been prevented, the value is false.
     if (this.editForm.dirty) {
       $event.returnValue = true;
     }
@@ -36,7 +40,8 @@ export class MemberEditComponent implements OnInit {
     this.userService.updateUser(this.authService.decodedToken.nameid, this.user).subscribe(next => {
       this.alertify.success('Profile updated successfully');
       // resetting form after saving changes so that it doesn't still isn't considered dirty
-      // giving this.user so that the details are preserved on the page after resetting
+      // giving this.user so that the details are preserved on the page after resetting.
+      // https://stackoverflow.com/questions/41500102/cleanest-way-to-reset-forms
       this.editForm.reset(this.user);
     }, error => {
       this.alertify.error(error);

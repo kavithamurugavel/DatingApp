@@ -11,10 +11,13 @@ import { AuthService } from '../_services/auth.service';
 // for more detailed comments on resolvers, check the member-detail and member-list resolvers.
 export class MemberEditResolver implements Resolve<User> {
     // we need access to the user's decoded token (for the id part in the edit url), so we are bringing in auth service
+    // and using decodedtoken.nameid in the method below
     constructor(private userService: UserService, private router: Router,
         private alertify: AlertifyService, private authService: AuthService) {}
 
     resolve(route: ActivatedRouteSnapshot): Observable<User> {
+        // the nameid is connected to the ClaimTypes.NameIdentifier (where we have the id of the user)
+        // from AuthController in the API. https://fildev.net/2018/10/06/token-authentication-management-jwt-in-angular/
         return this.userService.getUser(this.authService.decodedToken.nameid).pipe(
             catchError(error => {
                 this.alertify.error('Problem retrieving your data');

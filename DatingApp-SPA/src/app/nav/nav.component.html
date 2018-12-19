@@ -40,7 +40,9 @@
       </div>
     
       <!-- # - indicating that it is an angular template form -->
-      <!-- ngModel is used for two binding between template and component -->
+      <!-- ngModel is used for two way binding between template and component ie. 
+      binds the value of HTML controls (input, select, textarea) to application data.
+      https://www.w3schools.com/angular/angular_model.asp -->
       <!-- ngSubmit we are doing at form level rather than the submit button level -->
       <!-- required keyword in the input tag is to let angular know that the field is required -->
       <form *ngIf="!loggedIn()" #loginForm="ngForm" class="form-inline my-2 my-lg-0" (ngSubmit)="login()">
