@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
 import {map} from 'rxjs/operators';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
+import { User } from '../_models/user';
 
 // we use service so that the api calls are all centralized and there is no duplication of code in every component's ts file
 // this allows us to inject things to the service
@@ -18,8 +20,17 @@ export class AuthService {
   baseUrl = environment.apiUrl + 'auth/';
   jwtHelper = new JwtHelperService();
   decodedToken: any;
+  currentUser: User;
+  photoUrl = new BehaviorSubject<string>('../../assets/user.png'); // default photo
+  currentPhotoUrl = this.photoUrl.asObservable();
 
 constructor(private http: HttpClient) {}
+
+// update photo when the user changes the main photo
+changeMemberPhoto(photoUrl: string) {
+  this.photoUrl.next(photoUrl);
+}
+
 // model object is the info from the navbar i.e. login box
 login(model: any) {
 
@@ -33,12 +44,16 @@ login(model: any) {
   return this.http.post(this.baseUrl + 'login', model)
   .pipe(
     map((response: any) => {
-      const user = response; // the token coming back from the service
+      const user = response; // the response coming back from the service
       if (user) {
         localStorage.setItem('token', user.token);
+        // the foll. is for stringifying the user object that comes
+        // from AuthController's Login(). https://www.w3schools.com/js/js_json_stringify.asp
+        localStorage.setItem('user', JSON.stringify(user.user));
         // storing the decoded token
         this.decodedToken = this.jwtHelper.decodeToken(user.token);
-        console.log(this.decodedToken);
+        this.currentUser = user.user;
+        this.changeMemberPhoto(this.currentUser.photoUrl);
       }
     }));
 }

@@ -23,6 +23,9 @@
       <!-- dropdown styling from https://valor-software.com/ngx-bootstrap/old/3.0.1/#/dropdowns
       under 'Trigger by tag'. Section 6 Lecture 56 -->
       <div *ngIf="loggedIn()" class="dropdown" dropdown>
+        <span class="mr-1">
+          <img src="{{photoUrl}}" alt="">
+        </span>
         <a class="dropdown-toggle text-light" dropdownToggle>
           <!-- the unique_name property from the decoded token gives the username 
           the ? below means that the unique_name is optional, so that the 'undefined' errors can be prevented

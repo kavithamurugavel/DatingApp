@@ -15,6 +15,8 @@ export class MemberEditComponent implements OnInit {
   // https://blog.angular-university.io/angular-viewchild/ (esp. the part 'Using @ViewChild to inject a reference to a DOM element')
   @ViewChild('editForm') editForm: NgForm; // so that we have access to all the form methods
   user: User;
+  photoUrl: string;
+
   // https://angular.io/api/core/HostListener
   // the following lines are to display a warning of 'unsaved changes' if we close the browser window
   // while editing. window:beforeunload is a browser event which is triggered right before actually unloading the page.
@@ -34,6 +36,7 @@ export class MemberEditComponent implements OnInit {
     this.route.data.subscribe(data => {
       this.user = data['user'];
     });
+    this.authService.currentPhotoUrl.subscribe(photoUrl => this.photoUrl = photoUrl);
   }
 
   updateUser() {
@@ -46,5 +49,12 @@ export class MemberEditComponent implements OnInit {
     }, error => {
       this.alertify.error(error);
     });
+  }
+
+  // this method is used to update the display pic acc. to which photo the user
+  // sets as their main photo, the functionality of which is executed in the photo-editor
+  // component, which is the child of member-edit component
+  updateMainPhoto(photoUrl) {
+    this.user.photoUrl = photoUrl;
   }
 }

@@ -39,4 +39,13 @@ updateUser(id: number, user: User) {
   // PUT: update the user on the server. Returns the updated user upon success.
   return this.http.put(this.baseUrl + 'users/' + id, user);
 }
+
+// post requires a body so we are just giving an empty object {} to satisfy that
+setMainPhoto(userID: number, id: number) {
+  return this.http.post(this.baseUrl + 'users/' + userID + '/photos/' + id + '/setMain', {});
+}
+
+deletePhoto(userID: number, id: number) {
+  return this.http.delete(this.baseUrl + 'users/' + userID + '/photos/' + id);
+}
 }

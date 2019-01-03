@@ -41,11 +41,17 @@ namespace DatingApp.API
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
             .AddJsonOptions(opt => {
-                // to bypass the self referencing loop error between user reference in photo 
-                // and photo reference in user, for eg.
+                // to bypass the self referencing loop error between user reference in photo and photo reference in user, for eg. 
+                // Json.NET will ignore objects in reference loops and not serialize them. The first time an object is encountered it will be serialized 
+                // as usual but if the object is encountered as a child object of itself the serializer will skip serializing it.
+                // Link: https://stackoverflow.com/questions/11979637/what-does-referenceloophandling-ignore-in-newtonsoft-json-exactly-do
                 opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
             services.AddCors();
+
+            // for cloudinary, the configure maps the properties in the CloudinarySettings class with the appsettings part
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
+
             services.AddAutoMapper();
             
             // Transient lifetime services are created each time they're requested. This lifetime works best for lightweight, stateless services.

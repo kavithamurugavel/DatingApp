@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.DTOs;
 using DatingApp.API.Models;
@@ -18,11 +19,13 @@ namespace DatingApp.API.Controllers
     {
         private readonly IAuthRepository _authRepo;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public AuthController(IAuthRepository authRepo, IConfiguration configuration)
+        public AuthController(IAuthRepository authRepo, IConfiguration configuration, IMapper mapper)
         {
             _authRepo = authRepo;
             _configuration = configuration;
+            _mapper = mapper;
         }
 
         [HttpPost("register")] // specifying that this http post is for register
@@ -84,9 +87,14 @@ namespace DatingApp.API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
+            // the foll. is for setting user photo in nav bar Sec 11 Lec 114
+            // we'll send this info alongside the token in the return statement below
+            var user = _mapper.Map<UserForListDTO>(userFromRepo);
+
             // write the token created as a response we are sending back to client
             return Ok(new {
-                token = tokenHandler.WriteToken(token)
+                token = tokenHandler.WriteToken(token),
+                user
             });
         }
     }
