@@ -82,11 +82,14 @@ export class PhotoEditorComponent implements OnInit {
       this.currentMain = this.photos.filter(p => p.isMain === true)[0];
       this.currentMain.isMain = false;
       photo.isMain = true;
-      this.authService.changeMemberPhoto(photo.url);
-      // this.getMemberPhotoChange.emit(photo.url);
-      this.authService.currentUser.photoUrl = photo.url;
+      this.authService.changeMemberPhoto(photo.url); // the value changed here will be reflected in both nav and member-edit components
+      // since they are both subscribed to the BehaviorSubject observable from the authService
 
-      // overriding the local storage photo with the newly set main photo
+      // this.getMemberPhotoChange.emit(photo.url);
+
+      // this is required so that the newly updated photo from the step above will be updated from the local storage
+      this.authService.currentUser.photoUrl = photo.url;
+      // overriding the local storage photo with the new user details (i.e. with the new main photo)
       localStorage.setItem('user', JSON.stringify(this.authService.currentUser));
     }, error => {
       this.alertify.error(error);
@@ -95,8 +98,11 @@ export class PhotoEditorComponent implements OnInit {
 
   deletePhoto(id: number) {
     // confirm has string and okCallBack as parameters
+    // https://alertifyjs.com/confirm.html
     this.alertify.confirm('Are you sure you want to delete this photo?', () => {
       this.userService.deletePhoto(this.authService.decodedToken.nameid, id).subscribe(() => {
+        // splice's first param: An integer that specifies at what position to add/remove items and second param: delete count
+        // https://www.w3schools.com/jsref/jsref_splice.asp
         this.photos.splice(this.photos.findIndex(p => p.id === id), 1);
         this.alertify.success('Photo has been deleted');
       }, error => {

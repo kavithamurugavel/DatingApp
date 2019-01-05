@@ -21,14 +21,29 @@ export class AuthService {
   jwtHelper = new JwtHelperService();
   decodedToken: any;
   currentUser: User;
-  photoUrl = new BehaviorSubject<string>('../../assets/user.png'); // default photo
-  currentPhotoUrl = this.photoUrl.asObservable();
+  // BehaviorSubject step by step explanation: https://medium.com/@weswhite/angular-behaviorsubject-service-60485ef064fc
+  // Observable vs Subject vs BehaviorSubject: https://coryrylan.com/blog/rxjs-observables-versus-subjects
+  // https://stackoverflow.com/questions/39494058/behaviorsubject-vs-observable
+  // BehaviorSubject holds the value that needs to be shared with other components (a Subject that can emit the current value)
+  photoUrl = new BehaviorSubject<string>('../../assets/user.png'); // string because we need photo url, user.png is the default photo
+  currentPhotoUrl = this.photoUrl.asObservable(); // The components that share the current photo url subscribe to this
+  // variable 'currentPhotoUrl' returning the BehaviorSubject value without the functionality to change the value.
+  // also, asObservable casts any object that implements the observable interface into a new Observable instance.
+  // check this link for more details: https://www.bennadel.com/blog/3048-converting-a-subject-to-an-observable-using-rxjs-in-angular-2.htm
+
+  // Steps that go with Section 11 Lecture 116
+  // 1) Declare BehaviorSubject var and its corresponding asObservable in a service. 2) Write function that will update a new value for the
+  // BehaviorSubject var. 3) Go to the component and subscribe to the BehaviorSubject's observable var. 4) Change the template so that it
+  // reads the value from the BehaviorSubject var.
 
 constructor(private http: HttpClient) {}
 
 // update photo when the user changes the main photo
 changeMemberPhoto(photoUrl: string) {
   this.photoUrl.next(photoUrl);
+  // When you use next, you fire off an event that all subscribers will listen to.
+  // we call next & pass in a new value to the BehaviorSubject, so that when a component calls this method
+  // and updates the url, the other subscribed components get it too
 }
 
 // model object is the info from the navbar i.e. login box

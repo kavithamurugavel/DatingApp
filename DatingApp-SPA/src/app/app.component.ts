@@ -25,7 +25,9 @@ export class AppComponent implements OnInit {
     }
     if (user) {
       this.authService.currentUser = user;
-      this.authService.changeMemberPhoto(user.photoUrl);
+      this.authService.changeMemberPhoto(user.photoUrl); // we use changeMemberPhoto here so that when the page
+      // is refreshed/revisited, it gets the most recently locally stored value that is being set by the main photo updating steps
+      // in photo-editor.component.ts
     }
   }
 }

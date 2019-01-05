@@ -17,6 +17,7 @@ export class NavComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit() {
+    // this means that when the data changes, this subscribed component will get the new value
     this.authService.currentPhotoUrl.subscribe(photoUrl => this.photoUrl = photoUrl);
   }
 
