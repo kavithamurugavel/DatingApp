@@ -33,19 +33,20 @@ namespace DatingApp.API.Controllers
         // we have to add [FromBody] before an actions's parameter list, and also add the 
         // if(!ModelState.IsValid) condition first thing in the body of the action method (like in MVC controller course). Section 3 Lecture 31
         {
-            userForRegisterDTO.Username = userForRegisterDTO.Username.ToLower(); // for consistency
+            userForRegisterDTO.Name = userForRegisterDTO.Name.ToLower(); // for consistency
 
-            if(await _authRepo.UserExists(userForRegisterDTO.Username))
+            if(await _authRepo.UserExists(userForRegisterDTO.Name))
                 return BadRequest("User name already exists");
 
-            var userToCreate = new User
-            {
-                Name = userForRegisterDTO.Username
-            };
+            var userToCreate = _mapper.Map<User>(userForRegisterDTO);
 
             var createdUser = await _authRepo.Register(userToCreate, userForRegisterDTO.Password);
 
-            return StatusCode(201);
+            var userToReturn = _mapper.Map<UserForDetailedDTO>(createdUser);
+
+            // GetUser is from UsersController. Also we are returning userToReturn(i.e. UserForDetailDTO) instead of User
+            // because we don't need to be sending the password by mistake
+            return CreatedAtRoute("GetUser", new {controller = "Users", id = createdUser.ID}, userToReturn);
         }
 
         // https://en.wikipedia.org/wiki/JSON_Web_Token - also Section 3 Lecture 32-33

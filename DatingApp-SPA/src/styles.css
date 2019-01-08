@@ -6,6 +6,9 @@
 @import '../node_modules/font-awesome/css/font-awesome.min.css';
 @import '../node_modules/alertifyjs/build/css/alertify.min.css';
 @import '../node_modules/alertifyjs/build/css/themes/bootstrap.min.css';
+/* for date options we are using datepicker from bootstrap. Sec 12 Lec 127
+https://valor-software.com/ngx-bootstrap/#/datepicker */
+@import '../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css';
 
 /*styling for tab panel Lecture 89, Section 9
 instead of using custom class for tabs in a particular component (as seen in https://valor-software.com/ngx-bootstrap/#/tabs#tabs-custom-class) 

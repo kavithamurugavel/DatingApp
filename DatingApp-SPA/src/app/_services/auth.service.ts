@@ -73,8 +73,8 @@ login(model: any) {
     }));
 }
 
-register(model: any) {
-  return this.http.post(this.baseUrl + 'register', model);
+register(user: User) {
+  return this.http.post(this.baseUrl + 'register', user);
 }
 
 // moving this from its initial placement of nav component, since we might be reusing this in other pages in future

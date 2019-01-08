@@ -2,7 +2,7 @@
   <div class="card-img-wrapper">
     <!-- card-img-top is a bootstrap class -->
     <!-- check the card part of the link: https://getbootstrap.com/docs/4.1/components/card/ -->
-    <img class="card-img-top" src="{{user.photoUrl}}" alt="{{user.knownAs}}">
+    <img class="card-img-top" src="{{user.photoUrl || '../../../assets/user.png'}}" alt="{{user.knownAs}}">
     <ul class="list-inline member-icons animate text-center">
       <li class="list-inline-item">
         <!-- route link used to route for the specific member id -->
