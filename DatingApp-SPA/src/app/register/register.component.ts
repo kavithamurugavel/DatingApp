@@ -22,11 +22,13 @@ export class RegisterComponent implements OnInit {
   @Output() cancelRegister = new EventEmitter(); // @Output is to emit properties from child to parent
   user: User;
 
+  // https://angular.io/guide/reactive-forms#grouping-form-controls
   registerForm: FormGroup;
 
   // following is to get the red color theme for the datepicker control
   // https://valor-software.com/ngx-bootstrap/#/datepicker#themes
   // we give this as a partial class so that we don't have to define all the bsconfig params
+  // https://netbasal.com/getting-to-know-the-partial-type-in-typescript-ecfcfbc87cb6
   bsConfig: Partial<BsDatepickerConfig>;
 
   constructor(private authService: AuthService, private alertify: AlertifyService, private fb: FormBuilder,
@@ -44,7 +46,8 @@ export class RegisterComponent implements OnInit {
     this.createRegisterForm();
   }
 
-  // same as commented lines above done with FormBuilder
+  // same as commented lines above done, just done more readably with FormBuilder
+  // https://angular.io/guide/reactive-forms#generating-form-controls-with-formbuilder
   createRegisterForm() {
     this.registerForm = this.fb.group({
       // radio button with default male so that the user is forced to choose, since we really can't validate radio buttons
@@ -56,20 +59,27 @@ export class RegisterComponent implements OnInit {
       country: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]],
       confirmPassword: ['', Validators.required]
-    }, {validator: this.passwordMatchValidator});
+    }, {validator: this.passwordMatchValidator}); // https://scotch.io/@ibrahimalsurkhi/match-password-validation-with-angular-2
   }
 
-  // custom validator
+  // custom validator between two fields: https://angular.io/guide/form-validation#cross-field-validation
   passwordMatchValidator(g: FormGroup) {
+    // g.get(): We can access control's value using get() method
+    // The validation error object typically has a property whose name is the validation key, i.e. here 'mismatch',
+    // and whose value is an arbitrary dictionary of values that you could insert into an error message, {name}.
+    // https://angular.io/guide/form-validation#custom-validators
     return g.get('password').value === g.get('confirmPassword').value ? null : {'mismatch': true};
   }
 
   register() {
     if (this.registerForm.valid) {
       // getting the values from the form and passing it to the user object
-      // Object.assign clones the object from registerForm and assigns it to the empty object,
-      // which in turn is set to the user object
+      // Object.assign clones the object from registerForm and assigns it to the empty object, which in turn is set to the user object
+      // Object.assign lets us merge one object's properties into another, replacing values of properties with matching names.
+      // We can use this to copy an object's values without altering the existing one.
+      // https://angular-2-training-book.rangle.io/handout/immutable/javascript-solutions/object_assign.html
       this.user = Object.assign({}, this.registerForm.value);
+
       this.authService.register(this.user).subscribe(() => {
         this.alertify.success('Registration successful.');
       }, error => {
