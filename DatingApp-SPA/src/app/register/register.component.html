@@ -25,9 +25,9 @@
       <!-- the foll. ngClass is for showing is-invalid class in the error state and when it is touched and moved away without entering username-->
       <!-- here, the ngClass evaluates an expression. Check https://scotch.io/tutorials/the-many-ways-to-use-ngclass under
       'ngClass Using Evaluated Expression' for more details. We are using ngClass to conditionally add a class to our div if the form is invalid -->
-      <input type="text" [ngClass]="{'is-invalid': registerForm.get('username').errors && registerForm.get
-    ('username').touched}"
-      class="form-control" formControlName="username" placeholder="Username">
+      <input type="text" [ngClass]="{'is-invalid': registerForm.get('name').errors && registerForm.get
+    ('name').touched}"
+      class="form-control" formControlName="name" placeholder="Username">
       <!-- invalid-feedback is a bootstrap feature that helps in validating forms: https://getbootstrap.com/docs/4.0/components/forms/ -->
       <!-- before progressing further, read details about validation at https://scotch.io/tutorials/angular-2-form-validation#toc-angular-2-form-validation -->
       <div class="invalid-feedback">Please choose a username</div>

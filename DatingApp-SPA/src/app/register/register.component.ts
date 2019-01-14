@@ -52,7 +52,7 @@ export class RegisterComponent implements OnInit {
     this.registerForm = this.fb.group({
       // radio button with default male so that the user is forced to choose, since we really can't validate radio buttons
       gender: ['male'],
-      username: ['', Validators.required],
+      name: ['', Validators.required],
       knownAs: ['', Validators.required],
       dateOfBirth: [null, Validators.required],
       city: ['', Validators.required],

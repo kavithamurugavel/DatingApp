@@ -53,7 +53,7 @@ namespace DatingApp.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDTO userForLoginDTO)
         {
-            var userFromRepo = await _authRepo.Login(userForLoginDTO.Username.ToLower(), userForLoginDTO.Password);
+            var userFromRepo = await _authRepo.Login(userForLoginDTO.Name.ToLower(), userForLoginDTO.Password);
 
             if(userFromRepo == null)
                 return Unauthorized(); // just generic message for security purposes
