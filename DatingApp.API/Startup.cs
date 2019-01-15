@@ -74,6 +74,8 @@ namespace DatingApp.API
                             ValidateAudience = false
                         };
                     });
+            
+            services.AddScoped<LogUserActivity>(); // ActionFilter has to be registered here as a service in order to use it in our controller
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

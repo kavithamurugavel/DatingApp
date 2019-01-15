@@ -5,11 +5,17 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.DTOs;
+using DatingApp.API.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DatingApp.API.Controllers
 {
+    // https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/filters?view=aspnetcore-2.2#dependency-injection
+    // https://www.devtrends.co.uk/blog/dependency-injection-in-action-filters-in-asp.net-core
+    // The ServiceFilter attribute allows us to specify the type of our action filter.
+    // We are writing this in controller level so that the user's lastActive is updated whenever any of the below actions are touched by the user
+    [ServiceFilter(typeof(LogUserActivity))]     
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]

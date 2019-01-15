@@ -22,11 +22,15 @@ https://angular.io/guide/template-syntax#safe-navigation-operator -->
           </div>
           <div>
               <strong>Last Active:</strong>
-              <p>{{user.lastActive}}</p>
+              <!-- https://www.npmjs.com/package/time-ago-pipe -->
+              <p>{{user.lastActive | timeAgo}}</p>
           </div>
           <div>
               <strong>Member since:</strong>
-              <p>{{user.created}}</p>
+              <!-- A pipe takes in data as input and transforms it to a desired output. Here we use pipes to transform a created date into a human-friendly date. -->
+              <!-- https://angular.io/guide/pipes -->
+              <!-- https://angular.io/api/common/DatePipe#usage-notes -->
+              <p>{{user.created | date: 'mediumDate'}}</p>
           </div>
         </div>
         <div class="card-footer">
