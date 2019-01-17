@@ -12,12 +12,15 @@ import { catchError } from 'rxjs/operators';
 // resolver is that intermediate code, which can be executed when a link has been clicked and before a component is loaded.
 // https://codeburst.io/understanding-resolvers-in-angular-736e9db71267
 export class MemberListResolver implements Resolve<User[]> {
+    pageNumber = 1;
+    pageSize = 5;
+
     constructor(private userService: UserService, private router: Router,
         private alertify: AlertifyService) {}
 
     resolve(route: ActivatedRouteSnapshot): Observable<User[]> {
         // we don't have to subscribe here because router automatically does it
-        return this.userService.getUsers().pipe(
+        return this.userService.getUsers(this.pageNumber, this.pageSize).pipe(
             catchError(error => {
                 this.alertify.error('Problem retrieving data');
                 this.router.navigate(['/home']); // rerouting back to home so that we don't loop infinitely to the members page

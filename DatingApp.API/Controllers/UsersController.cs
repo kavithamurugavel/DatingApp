@@ -30,11 +30,30 @@ namespace DatingApp.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        // we are just giving a nudge to the action by giving FromQuery, so that the action/postman knows
+        // that the information is coming from the query string (since this is a get request, we cannot test this in
+        // postman by giving information in the Body part)
+        public async Task<IActionResult> GetUsers([FromQuery]UserParams userParams) // for pagination
         {
-            var users = await _datingRepo.GetUsers();
+            var currentUserID = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);            
+            var userFromRepo = await _datingRepo.GetUser(currentUserID);
+            userParams.UserID = currentUserID;
+
+            if(string.IsNullOrEmpty(userParams.Gender))
+            {
+                // setting the user params gender to the opposite so that we show male users to female and vice versa
+                userParams.Gender = userFromRepo.Gender == "male" ? "female" : "male";
+            }
+            
+            var users = await _datingRepo.GetUsers(userParams); // this would now contain a paged list of users (instead of sending all the users unnecessarily)
             var usersToReturn = _mapper.Map<IEnumerable<UserForListDTO>>(users);
-            return Ok(usersToReturn);
+
+            // APIController has access to HttpResponse
+            Response.AddPagination(users.CurrentPage, users.PageSize, 
+                        users.TotalCount, users.TotalPages);
+
+            return Ok(usersToReturn); // now the response headers will have the pagination information
+            // from the AddPagination method call in the above step
         }
 
         [HttpGet("{id}", Name="GetUser")]
