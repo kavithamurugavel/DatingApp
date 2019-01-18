@@ -62,6 +62,10 @@ namespace DatingApp.API.Data
             {
                 // since we have to calculate the age using date of birth for minDOB, we are subtracting maxAge from today
                 // the -1 is because we are asking for maximum year of a person
+                // That is, for eg, if user searches with maxAge as 30 on Jan 18 2019, then AddYears(-maxAge) will give Jan 18, 1989. But
+                // suppose someone turns 31 tomorrow i.e. on Jan 19, 2019, he should still show up in the user's search of maxAge 30.
+                // Which means the DOB of that person would be Jan 19 1988. That's why we have -1 in the formula. Basically since a person is
+                // the same age for 364 days, we include the -1.
                 // https://stackoverflow.com/questions/9/how-do-i-calculate-someones-age-in-c
                 var minDOB = DateTime.Today.AddYears(-userParams.MaxAge - 1);
                 var maxDOB = DateTime.Today.AddYears(-userParams.MinAge);
