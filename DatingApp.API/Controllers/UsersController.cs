@@ -6,6 +6,7 @@ using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.DTOs;
 using DatingApp.API.Helpers;
+using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -87,6 +88,36 @@ namespace DatingApp.API.Controllers
             // we can directly interpolate id as below
             // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated
             throw new Exception($"Updating user {id} failed on save");
+        }
+
+        // id is of the currently logged in user and recipient id is the id that the user likes
+        [HttpPost("{id}/like/{recipientID}")]
+        public async Task<IActionResult> LikeUser(int id, int recipientID)
+        {
+            if(id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var like = await _datingRepo.GetLike(id, recipientID);
+
+            // if a like is already in place for the user
+            if(like != null)
+                return BadRequest("You already liked the user");
+
+            if(await _datingRepo.GetUser(recipientID) == null)
+                return NotFound();
+
+            like = new Like
+            {
+                LikerID = id,
+                LikeeID = recipientID
+            };
+
+            _datingRepo.Add<Like>(like);
+
+            if(await _datingRepo.SaveAll())
+                return Ok();
+
+            return BadRequest("Failed to like user");
         }
     }
 }

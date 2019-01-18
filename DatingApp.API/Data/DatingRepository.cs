@@ -26,6 +26,12 @@ namespace DatingApp.API.Data
             _context.Remove(entity);
         }
 
+        // testing to see if user id matches the liker id and recepient id matches the likee id
+        public async Task<Like> GetLike(int userID, int recipientID)
+        {
+            return await _context.Likes.FirstOrDefaultAsync(u => u.LikerID == userID && u.LikeeID == recipientID);
+        }
+
         public async Task<Photo> GetMainPhotoForUser(int userID)
         {
             return await _context.Photos.Where(u => u.UserID == userID)
@@ -56,6 +62,20 @@ namespace DatingApp.API.Data
             users = users.Where(u => u.ID != userParams.UserID); // this would filter out the current logged in user from their matches list
 
             users = users.Where(u => u.Gender == userParams.Gender); // this would filter out users acc.to gender
+
+            // filtering only the users that either have a liker or a likee id from the likes table
+            if(userParams.Likers)
+            {
+                var userLikers = await GetUserLikes(userParams.UserID, userParams.Likers); // it is fine to use userParams.likers here,
+                // since this is anyway a boolean that gets sent to GetUserLikes
+                users = users.Where(u => userLikers.Contains(u.ID));
+            }
+
+            if(userParams.Likees)
+            {
+                var userLikees = await GetUserLikes(userParams.UserID, userParams.Likers);
+                users = users.Where(u => userLikees.Contains(u.ID));
+            }
 
             // if user customizes the filter for age
             if(userParams.MinAge != 18 || userParams.MaxAge != 99)
@@ -89,6 +109,25 @@ namespace DatingApp.API.Data
             
             // since CreateAsync is a static class, we can call it directly as below
             return await PagedList<User>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
+        }
+
+        // id is the currently logged in user's id
+        private async Task<IEnumerable<int>> GetUserLikes(int id, bool likers)
+        {
+            var user = await _context.Users.Include(x => x.Likers)
+            .Include(x => x.Likees).FirstOrDefaultAsync(u => u.ID == id);
+
+            // returning the user ids that have liked the currently logged in user
+            // i.e. returning list of liker user ids of the currently logged in (likee) user
+            if(likers)
+            {
+                return user.Likers.Where(u => u.LikeeID == id).Select(i => i.LikerID);
+            }
+            // returning the likees of the currently logged in user
+            else
+            {
+                return user.Likees.Where(u => u.LikerID == id).Select(i => i.LikeeID);
+            }
         }
 
         public async Task<bool> SaveAll()
