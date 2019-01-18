@@ -12,6 +12,7 @@ import { catchError } from 'rxjs/operators';
 // resolver is that intermediate code, which can be executed when a link has been clicked and before a component is loaded.
 // https://codeburst.io/understanding-resolvers-in-angular-736e9db71267
 export class MemberListResolver implements Resolve<User[]> {
+    // just some random defaults for testing
     pageNumber = 1;
     pageSize = 5;
 

@@ -28,6 +28,8 @@ getUsers(page?, itemsPerPage?, userParams?): Observable<PaginatedResult<User[]>>
   // since PaginatedResult is a class, we have to create a new instance here
   const paginatedResult: PaginatedResult<User[]> = new PaginatedResult<User[]>();
 
+  // The url query string parameters are added using the helper class HttpParams
+  // https://www.tektutorialshub.com/angular/angular-pass-url-parameters-query-strings/#HttpParams
   let params = new HttpParams();
 
   // this check is technically not reqd. since our API sends pageNumber = 1 and itemsPerPage = 10 by default
@@ -48,7 +50,9 @@ getUsers(page?, itemsPerPage?, userParams?): Observable<PaginatedResult<User[]>>
   // the foll. was commented due to adding jwt token part in app.module.ts
   // return this.http.get<User[]>(this.baseUrl + 'users', httpOptions);
 
-  // observe: response will give us access to HttpResponse. We are including the response headers & HttpParam in get() to
+  // observe: Tell HttpClient that you want the full response with the observe option.
+  // https://angular.io/guide/http#reading-the-full-response
+  // We are including the response headers & HttpParam in get() to
   // get the users as well as the pagination information from the response headers and store them in our PaginatedResult class.
   return this.http.get<User[]>(this.baseUrl + 'users', {observe: 'response', params})
   .pipe (

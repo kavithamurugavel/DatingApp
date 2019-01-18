@@ -6,6 +6,8 @@
     <form class="form-inline" #form="ngForm" (ngSubmit)="loadUsers()" novalidate>
         <div class="form-group">
           <label for="minAge">Age From</label>
+          <!-- type='number' here is a scrollable number field by bootstrap
+          https://v4-alpha.getbootstrap.com/components/forms/#textual-inputs - check Number in the list -->
           <input type="number" class="form-control ml-1" style="width: 70px" id="minAge" 
           [(ngModel)]="userParams.minAge" name="minAge">
         </div>
@@ -22,6 +24,8 @@
           [(ngModel)]="userParams.gender" name="gender">
 
           <!-- displaying the genders. Value is the value that we return from this -->
+          <!-- Property binding value (in the DOM) to gender.value  
+          https://stackoverflow.com/questions/39112904/property-binding-vs-attribute-interpolation-->
           <option *ngFor="let gender of genderList" [value]="gender.value">
             {{gender.displayName}}
           </option>
@@ -60,7 +64,7 @@
   <!-- pagination markup: https://valor-software.com/ngx-bootstrap/#/pagination#custom-links-content -->
   <!-- page changed event: https://valor-software.com/ngx-bootstrap/#/pagination#page-changed-event -->
   <!-- boundary links is true here because we want the first and last pages to be disabled
-  when there are no first and last pages -->
+  when we cannot navigate to first (i.e. if we are already on the first page) and last pages (i.e. if we are already on the last page) -->
   <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems"
               [itemsPerPage]="pagination.itemsPerPage"
               [(ngModel)]="pagination.currentPage"

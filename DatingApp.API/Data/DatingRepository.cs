@@ -49,19 +49,20 @@ namespace DatingApp.API.Data
         public async Task<PagedList<User>> GetUsers(UserParams userParams)
         {
             // previously we had toListAsync in the foll. line, but due to the pagination code addition, this has been deferred to the PagedList class
-            var users = _context.Users.Include(p => p.Photos)
-            .OrderByDescending(u => u.LastActive).AsQueryable();
+            // ASQueryable: https://weblogs.asp.net/zeeshanhirani/using-asqueryable-with-linq-to-objects-and-linq-to-sql
+            // https://stackoverflow.com/questions/17366907/what-is-the-purpose-of-asqueryable
+            var users = _context.Users.Include(p => p.Photos).OrderByDescending(u => u.LastActive).AsQueryable();
 
-            users = users.Where(u => u.ID != userParams.UserID); // this would filter out the current logged in user from the matches list
+            users = users.Where(u => u.ID != userParams.UserID); // this would filter out the current logged in user from their matches list
 
             users = users.Where(u => u.Gender == userParams.Gender); // this would filter out users acc.to gender
 
             // if user customizes the filter for age
             if(userParams.MinAge != 18 || userParams.MaxAge != 99)
             {
-                // since we have to calculate the age using date of birth
-                // for minDOB, we are subtracting maxAge from today
+                // since we have to calculate the age using date of birth for minDOB, we are subtracting maxAge from today
                 // the -1 is because we are asking for maximum year of a person
+                // https://stackoverflow.com/questions/9/how-do-i-calculate-someones-age-in-c
                 var minDOB = DateTime.Today.AddYears(-userParams.MaxAge - 1);
                 var maxDOB = DateTime.Today.AddYears(-userParams.MinAge);
 

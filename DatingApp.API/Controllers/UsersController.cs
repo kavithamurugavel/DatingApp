@@ -45,10 +45,11 @@ namespace DatingApp.API.Controllers
                 userParams.Gender = userFromRepo.Gender == "male" ? "female" : "male";
             }
             
-            var users = await _datingRepo.GetUsers(userParams); // this would now contain a paged list of users (instead of sending all the users unnecessarily)
+            // this would now contain a paged list of users and pagination information(instead of sending all the users unnecessarily)
+            var users = await _datingRepo.GetUsers(userParams);
             var usersToReturn = _mapper.Map<IEnumerable<UserForListDTO>>(users);
 
-            // APIController has access to HttpResponse
+            // APIController has access to HttpResponse (represents the outgoing side of an individual HTTP request) via variable Response
             Response.AddPagination(users.CurrentPage, users.PageSize, 
                         users.TotalCount, users.TotalPages);
 

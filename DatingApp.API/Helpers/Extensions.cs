@@ -24,6 +24,8 @@ namespace DatingApp.API.Helpers
             // to send the headers as camel case 
             var camelCaseFormatter = new JsonSerializerSettings();
             camelCaseFormatter.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            
+            // https://www.newtonsoft.com/json/help/html/SerializeObject.htm - basically converts the pagination info into JSON format
             response.Headers.Add("Pagination", JsonConvert.SerializeObject(paginationHeader, camelCaseFormatter));
             response.Headers.Add("Access-Control-Expose-Headers", "Pagination");
         }

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DatingApp.API.Helpers
 {
     // for pagination Section 14 Lecture 137
+    // for the complete pagination workflow between SPA and API, check Important Points.txt
     public class PagedList<T> : List<T> // making this generic so that we can use for things other than users too
     {
         public int CurrentPage { get; set; }
@@ -25,6 +26,8 @@ namespace DatingApp.API.Helpers
         // this returns a new instance of the pagedlist
         // IQueryable: defers the execution of our request and allows us to define parts of our query
         // against our database in multiple steps and with deferred execution.
+        // https://samueleresca.net/2015/03/the-difference-between-iqueryable-and-ienumerable/
+        // https://stackoverflow.com/questions/1578778/using-iqueryable-with-linq - this link has better explanation
         public static async Task<PagedList<T>> CreateAsync(IQueryable<T> source, int pageNumber, int pageSize)
         {
             // source could be the list of users for eg:
