@@ -18,7 +18,8 @@ export class ListsResolver implements Resolve<User[]> {
         private alertify: AlertifyService) {}
 
     resolve(route: ActivatedRouteSnapshot): Observable<User[]> {
-        // we are giving null in place of userParams
+        // we are giving null in place of userParams, since for lists we pretty much
+        // need just the liker/likee param defined in the url query string
         return this.userService.getUsers(this.pageNumber, this.pageSize, null, this.likesParam).pipe(
             catchError(error => {
                 this.alertify.error('Problem retrieving data');

@@ -91,6 +91,7 @@ namespace DatingApp.API.Controllers
         }
 
         // id is of the currently logged in user and recipient id is the id that the user likes
+        // this would be called in user.service in the SPA
         [HttpPost("{id}/like/{recipientID}")]
         public async Task<IActionResult> LikeUser(int id, int recipientID)
         {

@@ -96,6 +96,8 @@ deletePhoto(userID: number, id: number) {
   return this.http.delete(this.baseUrl + 'users/' + userID + '/photos/' + id);
 }
 
+// the API call from this method will first check to see if a like is already in place for this user and recipient ids
+// if not, it will log the like in the Likes table
 sendLike(id: number, recipientId: number) {
   return this.http.post(this.baseUrl + 'users/' + id + '/like/' + recipientId, {});
 }

@@ -13,10 +13,13 @@ namespace DatingApp.API.Data
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Like> Likes { get; set; }
 
-        // overriding the OnModelCreating method for our like functionality Sec 15 Lec 150
+        // overriding the OnModelCreating method, based on Fluent API (basically a means to define 
+        // custom code-first conventions with EF), for our like functionality Sec 15 Lec 150
+        // https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/fluent/types-and-properties
+        // https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/conventions/custom
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            // making our primary key a combination of liker and likee ID, since we 
+            // making our composite primary key a combination of liker and likee ID, since we 
             // don't want one user liking another user more than once
             builder.Entity<Like>()
             .HasKey(k => new {k.LikerID, k.LikeeID});

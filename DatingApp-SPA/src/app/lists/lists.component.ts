@@ -28,7 +28,8 @@ export class ListsComponent implements OnInit {
   }
 
   loadUsers() {
-    // we are giving null in place of userParams
+    // we are giving null in place of userParams, since for lists we pretty much
+    // need just the liker/likee param defined in the url query string
     this.userService.getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, null, this.likesParam)
     .subscribe((res: PaginatedResult<User[]>) => {
       this.users = res.result;

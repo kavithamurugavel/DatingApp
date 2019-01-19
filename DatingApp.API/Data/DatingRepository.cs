@@ -63,17 +63,20 @@ namespace DatingApp.API.Data
 
             users = users.Where(u => u.Gender == userParams.Gender); // this would filter out users acc.to gender
 
-            // filtering only the users that either have a liker or a likee id from the likes table
+            // if the query string from the SPA has likers/likees, we filter only the users that either have a liker or a likee id from the likes table
             if(userParams.Likers)
             {
-                var userLikers = await GetUserLikes(userParams.UserID, userParams.Likers); // it is fine to use userParams.likers here,
-                // since this is anyway a boolean that gets sent to GetUserLikes
+                var userLikers = await GetUserLikes(userParams.UserID, userParams.Likers);
+                // filtering the users that like the currently logged user
                 users = users.Where(u => userLikers.Contains(u.ID));
             }
 
             if(userParams.Likees)
             {
-                var userLikees = await GetUserLikes(userParams.UserID, userParams.Likers);
+                var userLikees = await GetUserLikes(userParams.UserID, userParams.Likers); // it is fine to use userParams.likers here,
+                // since it is anyway a boolean that gets sent to GetUserLikes
+
+                // filtering the users that are liked by the currently logged in user
                 users = users.Where(u => userLikees.Contains(u.ID));
             }
 
@@ -114,6 +117,7 @@ namespace DatingApp.API.Data
         // id is the currently logged in user's id
         private async Task<IEnumerable<int>> GetUserLikes(int id, bool likers)
         {
+            // collecting the likers and likees of the user
             var user = await _context.Users.Include(x => x.Likers)
             .Include(x => x.Likees).FirstOrDefaultAsync(u => u.ID == id);
 
