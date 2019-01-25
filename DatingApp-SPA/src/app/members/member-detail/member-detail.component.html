@@ -37,7 +37,11 @@ https://angular.io/guide/template-syntax#safe-navigation-operator -->
           <!-- https://getbootstrap.com/docs/4.0/utilities/flex/ -->
           <div class="btn-group d-flex">
             <button class="btn btn-primary w-100">Like</button>
-            <button class="btn btn-success w-100">Message</button>
+            <!-- the click event below is for opening up the message tab when we click on message button
+            https://valor-software.com/ngx-bootstrap/#/tabs#tabs-manual-select
+            The 3 here is the tab number of messages on the member-detail page i.e.
+            About is 0, Interests in 1, Photos is 2, Messages is 3-->
+            <button class="btn btn-success w-100" (click)="selectTab(3)">Message</button>
           </div>
         </div>
       </div>
@@ -48,7 +52,7 @@ https://angular.io/guide/template-syntax#safe-navigation-operator -->
     class for tabs: https://valor-software.com/ngx-bootstrap/#/tabs -->
     <div class="col-sm-8">
       <div class="tab-panel">
-        <tabset class="member-tabset">
+        <tabset class="member-tabset" #memberTabs>
           <tab heading="About {{user?.knownAs}}">
             <h4>Description</h4>
             <p>{{user.introduction}}</p>
@@ -64,7 +68,8 @@ https://angular.io/guide/template-syntax#safe-navigation-operator -->
               <ngx-gallery [options]="galleryOptions" [images]="galleryImages"></ngx-gallery>
           </tab>
           <tab heading="Messages">
-              <h4>Messages will go here</h4>
+            <!-- recipientID is an input property for child component member-messages -->
+              <app-member-messages [recipientID]="user.id"></app-member-messages>
           </tab>
         </tabset>
       </div>

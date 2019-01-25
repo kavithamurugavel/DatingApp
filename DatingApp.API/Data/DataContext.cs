@@ -12,6 +12,7 @@ namespace DatingApp.API.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Like> Likes { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         // overriding the OnModelCreating method, based on Fluent API (basically a means to define 
         // custom code-first conventions with EF), for our like functionality Sec 15 Lec 150
@@ -35,6 +36,19 @@ namespace DatingApp.API.Data
             .HasOne(u => u.Liker)
             .WithMany(u => u.Likees)
             .HasForeignKey(u => u.LikerID)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            // custom configuring the messages entity next
+            // this is basically explaining to EF that one sender has many sent messages
+            builder.Entity<Message>()
+            .HasOne(u => u.Sender)
+            .WithMany(m => m.MessagesSent)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            // this is basically explaining to EF that one receiver has many received messages
+            builder.Entity<Message>()
+            .HasOne(u => u.Recipient)
+            .WithMany(m => m.MessagesReceived)
             .OnDelete(DeleteBehavior.Restrict);
         }
     }

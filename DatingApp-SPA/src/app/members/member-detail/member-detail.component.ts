@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { User } from 'src/app/_models/user';
 import { UserService } from 'src/app/_services/user.service';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
+import { TabsetComponent } from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-member-detail',
@@ -12,6 +13,9 @@ import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gal
 })
 export class MemberDetailComponent implements OnInit {
   user: User;
+
+  // this is for messages tab: https://valor-software.com/ngx-bootstrap/#/tabs#tabs-manual-select
+  @ViewChild('memberTabs') memberTabs: TabsetComponent;
 
   // from ngx gallery: https://www.npmjs.com/package/ngx-gallery (section 9 lecture 91)
   galleryOptions: NgxGalleryOptions[];
@@ -25,6 +29,11 @@ export class MemberDetailComponent implements OnInit {
     // this.loadUser(); // this cannot be used without using ? in html, because on first load a null user will throw console errors
     this.route.data.subscribe(data => {
       this.user = data['user']; // this user is the 'user' from the resolve part in routes.ts
+    });
+
+    this.route.queryParams.subscribe(params => {
+      const selectedTab = params['tab']; // this coincides with the queryParams from messages.html
+      this.memberTabs.tabs[selectedTab > 0 ? selectedTab : 0].active = true;
     });
 
     // check code snippets in: https://www.npmjs.com/package/ngx-gallery
@@ -53,6 +62,11 @@ export class MemberDetailComponent implements OnInit {
       });
     }
     return imageUrls;
+  }
+
+  // https://valor-software.com/ngx-bootstrap/#/tabs#tabs-manual-select
+  selectTab(tabID: number) {
+    this.memberTabs.tabs[tabID].active = true;
   }
 
   // getting the id from members/4 for eg.
