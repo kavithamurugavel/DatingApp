@@ -31,8 +31,11 @@ export class MemberDetailComponent implements OnInit {
       this.user = data['user']; // this user is the 'user' from the resolve part in routes.ts
     });
 
+    // Important! - the query params are accessed by subscribing to this.route.queryParams, as below,
+    // whereas, the path variables are accessed by "this.route.snapshot.params"
+    // https://stackoverflow.com/questions/47455734/how-get-query-parameters-from-url-in-angular-5
     this.route.queryParams.subscribe(params => {
-      const selectedTab = params['tab']; // this coincides with the queryParams from messages.html
+      const selectedTab = params['tab']; // this coincides with the queryParams from messages.html. We get this from the query string
       this.memberTabs.tabs[selectedTab > 0 ? selectedTab : 0].active = true;
     });
 

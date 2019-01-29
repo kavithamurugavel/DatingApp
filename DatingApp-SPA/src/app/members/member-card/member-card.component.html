@@ -12,8 +12,9 @@
         <button class="btn btn-primary" (click)="sendLike(user.id)"><i class="fa fa-heart"></i></button>
         
         <!-- the following routerLink and queryParams is to take the user to the messages tab of the 
-        member-detail page directly when we click on the envelope icon. 
-        https://valor-software.com/ngx-bootstrap/#/tabs#tabs-manual-select -->
+        member-detail page directly when we click on the envelope icon on the member-card component. 
+        https://valor-software.com/ngx-bootstrap/#/tabs#tabs-manual-select. For more comments on the flow
+        of queryParams, check Important points.txt -->
         <button class="btn btn-primary" [routerLink]="['/members/', user.id]" [queryParams]="{tab: 3}"><i class="fa fa-envelope"></i></button>
       </li>
     </ul>

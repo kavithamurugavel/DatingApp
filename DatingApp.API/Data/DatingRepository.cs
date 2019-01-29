@@ -147,6 +147,8 @@ namespace DatingApp.API.Data
 
         public async Task<PagedList<Message>> GetMessagesForUser(MessageParams messageParams)
         {
+            // You can chain multiple calls to ThenInclude to continue including further levels of related data.
+            // https://docs.microsoft.com/en-us/ef/core/querying/related-data#eager-loading - look under 'Including multiple levels'
             var messages = _context.Messages
             .Include(u => u.Sender).ThenInclude(p => p.Photos)
             .Include(u => u.Recipient).ThenInclude(p => p.Photos)

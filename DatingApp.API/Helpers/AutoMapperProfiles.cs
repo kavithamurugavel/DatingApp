@@ -39,8 +39,12 @@ namespace DatingApp.API.Helpers
             CreateMap<Photo, PhotoForReturnDTO>();
             CreateMap<PhotoForCreationDTO, Photo>();
             CreateMap<UserForRegisterDTO, User>();
+            // By calling ReverseMap, AutoMapper creates a reverse mapping configuration that includes unflattening
+            // http://docs.automapper.org/en/stable/Reverse-Mapping-and-Unflattening.html
             CreateMap<MessageForCreationDTO, Message>().ReverseMap();
             
+            // we are basically getting the photo url from the Message entity projected onto the 
+            // SenderPhotoUrl property of MessageToReturnDTO using ForMember and MapFrom
             CreateMap<Message, MessageToReturnDTO>()
                     .ForMember(m => m.SenderPhotoUrl, 
                     opt => opt.MapFrom( u => u.Sender.Photos.FirstOrDefault(p => p.IsMain).Url))

@@ -20,7 +20,10 @@
 }
 
 .card-body {
-    /* overflow-y is targetting the vertical area */
+    /* overflow-y is targetting the vertical area 
+    The overflow-y property specifies whether to clip the content, add a scroll bar, 
+    or display overflow content of a block-level element, when it overflows at the top and bottom edges.
+    https://www.w3schools.com/cssref/css3_pr_overflow-y.asp*/
     overflow-y: scroll;
     height: 400px;
 }
