@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -35,9 +36,23 @@ namespace DatingApp.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // the foll.line of code are part of normal DBContext code in an ASP.NET Web App, say. Unsure of another way to add this code other than physically type it out in a ASP.NET Web API
+            // giving a MySql config for Production mode
+            // the ConfigureWarnings part is included to ignore the MySql's Include warnings when the app is run
+            // https://docs.microsoft.com/en-us/ef/core/querying/related-data#ignored-includes
+            // Section 17 Lecture 182
+            services.AddDbContext<DataContext>(x => 
+            x.UseMySql(Configuration.GetConnectionString("DefaultConnection"))
+            .ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.IncludeIgnoredWarning)));
+
+            // the foll.line of code are part of normal DBContext code in an ASP.NET Web App, say. Unsure of another way 
+            // to add this code other than physically type it out in a ASP.NET Web API
             // plus the Configuration. is part of the Configuration declared in the ctor
-            services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            // -- Note: This particular config was commented out for Section 17 Lecture 181, when we swapped SQLite for MySql (above)
+            // The instructor wanted to copy the entire ConfigureServices method, paste it with a new name called ConfigureDevelopmentServices
+            // because MVC would recognize the config as the config for Development mode, based on convention based naming
+            // But I was having trouble trying to get the application to take this particular ConfigureServices method for Production, so I am
+            // just commenting the below line out instead of having another separate ConfigureDevelopmentServices
+            // services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
             .AddJsonOptions(opt => {
@@ -115,7 +130,22 @@ namespace DatingApp.API
             // app.UseHttpsRedirection();
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
-            app.UseMvc(); // middleware, sits between client request and API end point
+            
+            // this basically makes the application to run the default file like 
+            // index.html (in our case) or default.aspx, etc.
+            app.UseDefaultFiles(); 
+            app.UseStaticFiles(); // looks inside the wwwroot folder and serves the content from there
+            
+            // middleware, sits between client request and API end point
+            // we give this configuration so that mvc knows the routes of the SPA
+            // for eg: visiting localhost:5000/members would mean that the API would know 
+            // the SPA route /members is where it should be redirected
+            app.UseMvc(routes => {
+                routes.MapSpaFallbackRoute(
+                    name: "spa-fallback",
+                    defaults: new {controller = "Fallback", action = "Index"}
+                );
+            }); 
         }
     }
 }

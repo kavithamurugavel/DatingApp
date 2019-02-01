@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using DatingApp.API.Models;
@@ -18,21 +19,26 @@ namespace DatingApp.API.Data
         // serializing the user seeding json to object
         public void SeedUsers()
         {
-            var userData = File.ReadAllText("Data/UserSeedData.json");
-            var users = JsonConvert.DeserializeObject<List<User>>(userData);
-
-            foreach (var user in users)
+            // making sure we don't keep accidentally seeding same users again and again
+            if(!_context.Users.Any())
             {
-                byte[] passwordHash, passwordSalt;
-                // just giving password string directly because the json anyway has 'password' for every uer
-                CreatePasswordHash("password", out passwordHash, out passwordSalt);
-                user.PasswordHash = passwordHash;
-                user.PasswordSalt = passwordSalt;
-                user.Name = user.Name.ToLower();
+                var userData = File.ReadAllText("Data/UserSeedData.json");
+                var users = JsonConvert.DeserializeObject<List<User>>(userData);
 
-                _context.Users.Add(user);
+                foreach (var user in users)
+                {
+                    byte[] passwordHash, passwordSalt;
+                    // just giving password string directly because the json anyway has 'password' for every uer
+                    CreatePasswordHash("password", out passwordHash, out passwordSalt);
+                    user.PasswordHash = passwordHash;
+                    user.PasswordSalt = passwordSalt;
+                    user.Name = user.Name.ToLower();
+
+                    _context.Users.Add(user);
+                }
+                _context.SaveChanges();
             }
-            _context.SaveChanges();
+            
         }
 
         // copying this method from the AuthRepository just for dev purposes
