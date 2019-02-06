@@ -39,6 +39,7 @@ namespace DatingApp.API
             // giving a MySql config for Production mode
             // the ConfigureWarnings part is included to ignore the MySql's Include warnings when the app is run
             // https://docs.microsoft.com/en-us/ef/core/querying/related-data#ignored-includes
+            // https://docs.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.dbcontextoptionsbuilder.configurewarnings?view=efcore-2.1
             // Section 17 Lecture 182
             services.AddDbContext<DataContext>(x => 
             x.UseMySql(Configuration.GetConnectionString("DefaultConnection"))
@@ -131,15 +132,19 @@ namespace DatingApp.API
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
             
-            // this basically makes the application to run the default file like 
-            // index.html (in our case) or default.aspx, etc.
+            // this basically makes the application to run the default file like index.html (in our case) or default.aspx, etc.
+            // Setting a default home page provides visitors a logical starting point when visiting your site.
+            // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/static-files?view=aspnetcore-2.2#serve-a-default-document
             app.UseDefaultFiles(); 
+            
+            // Static files, such as HTML, CSS, images, and JavaScript, are assets an ASP.NET Core app serves directly to clients.
+            // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/static-files?view=aspnetcore-2.2
             app.UseStaticFiles(); // looks inside the wwwroot folder and serves the content from there
             
-            // middleware, sits between client request and API end point
-            // we give this configuration so that mvc knows the routes of the SPA
-            // for eg: visiting localhost:5000/members would mean that the API would know 
-            // the SPA route /members is where it should be redirected
+            // middleware, sits between client request and API end point. We give this configuration so that mvc knows the routes of the SPA
+            // for eg: visiting localhost:5000/members would mean that the API would know the SPA route /members is where it should be redirected
+            // i.e. It's for when you want to handle the 404 within your front-end application (let all Routes go through so your front-end can handle them)
+            // https://github.com/aspnet/JavaScriptServices/issues/973
             app.UseMvc(routes => {
                 routes.MapSpaFallbackRoute(
                     name: "spa-fallback",
